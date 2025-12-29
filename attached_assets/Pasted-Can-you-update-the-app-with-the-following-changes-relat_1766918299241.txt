@@ -1,0 +1,38 @@
+Can you update the app with the following changes related to auto-rescheduling and notifications:
+
+Auto-reschedule option for normal tasks (not recurring)
+
+In the Create Task / Edit Task form for normal (non-recurring) tasks, add a setting to enable auto-reschedule.
+
+When auto-reschedule is enabled for a task, allow the user to customize the auto-reschedule interval, which is separate from the recurring task feature.
+
+Example intervals: “move to same time next day”, “move to same time in 2 days”, etc.
+
+This auto-reschedule applies only to normal tasks, not to recurring tasks (recurring tasks continue to follow their own recurrence rules).
+​
+
+Behavior when a task is missed with auto-reschedule enabled
+
+If a normal task with auto-reschedule enabled becomes missed (due time passes and it is not completed), the app should:
+
+Automatically create a new due date/time for that task according to the user’s chosen auto-reschedule interval.
+
+Keep the task in the list as an upcoming task with the new schedule.
+
+This behavior is independent from recurring tasks and should not create a recurring pattern; it only repeatedly moves the same task based on the configured auto-reschedule interval until it is completed or deleted.
+​
+
+Notification timing fix for tasks due soon
+
+Adjust the notification logic so that when a task is 2 minutes away from its due time, the app will:
+
+Start notifying the user every 30 seconds until the task is due (or until it is marked as completed/dismissed).
+
+These notifications should use the existing notification system (browser/PWA notifications) and respect user permissions.
+​
+
+The goal is that, for a task with due time T, starting at T − 2 minutes, the user receives a notification roughly at:
+
+T − 2:00, T − 1:30, T − 1:00, T − 0:30, and optionally at T if still not completed.
+
+Please implement these changes so that normal tasks can have a configurable auto-reschedule interval (separate from recurring tasks) and due tasks trigger notifications every 30 seconds starting 2 minutes before their due time.

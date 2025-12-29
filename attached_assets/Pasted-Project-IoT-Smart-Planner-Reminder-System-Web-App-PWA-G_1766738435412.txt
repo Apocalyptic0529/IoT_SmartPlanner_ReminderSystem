@@ -1,0 +1,245 @@
+Project: IoT Smart Planner & Reminder System – Web App (PWA)
+
+Goal:
+Build a responsive web application for task planning and reminders that:
+
+- Uses TypeScript for the front-end logic and Tailwind CSS for styling, built via a Node.js-based toolchain (e.g., Vite/Next/Node scripts) for bundling and development.
+​
+- Works well on desktop and mobile browsers.
+
+- Can be installed as a Progressive Web App (PWA) on Android (Add to Home Screen) and open in standalone/fullscreen mode.
+​
+- Uses Firebase (Auth + Firestore or Realtime Database + Cloud Storage) as the single backend shared with an ESP32 IoT device.
+​
+Demo credentials
+
+User: Demo123
+
+Password: 123456789
+
+Core features
+1. User accounts & auth
+
+- Multiple users, each with separate tasks and data.
+
+- Email + password signup and login using Firebase Authentication (no social logins).
+​
+
+- Secure session handling and “stay logged in” behavior where appropriate.
+
+2. Task management
+
+- Create, edit, delete tasks.
+
+- Task fields (include all of the following):
+
+	- title
+
+	- description
+
+	- category (e.g., Academic, Personal, Urgent, etc.)
+
+	- priority (with color-coded display)
+
+	- due date & time
+
+	- status (pending, completed, missed)
+
+	- attachments (see next section)
+
+	- score contribution based on completion result
+
+- Filter and search by category, priority, status, and date range.
+
+3. Attachments and stable storage
+
+- Implement stable file storage for attachments using Firebase Cloud Storage.
+​
+
+- For each attachment:
+
+	- Upload the file to Cloud Storage.
+
+	- Store the download URL and metadata (file name, type, size) in the task record in Firestore/Realtime DB.
+​
+
+- Allow users to open or download attachments from the task details view.
+
+4. Smart reminders & scheduling
+
+- Show clear sections for upcoming, overdue, and today’s tasks.
+
+- When a task is missed:
+
+	- On next app open, show a popup dialog asking the user to choose a new time.
+
+	- If the user ignores the popup, automatically move the task to the same time on the next day.
+
+	- Allow the user to choose an option to delete the missed task, but this missed event still affects the score negatively.
+
+- Prepare data and logic so an ESP32 client can read “tasks due within the next 30 minutes” for IoT alerts.
+
+5. Reminders and notifications
+
+- In-app reminders:
+
+	- Highlight tasks due soon or overdue.
+
+	- Sort and style them to stand out (e.g., color or icons).
+
+- Browser push notifications (where supported):
+
+	- Notify users for tasks due within an hour, with reminder checks every 15 minutes (e.g., at 60, 45, 30, 15 minutes remaining).
+​
+
+	- Use the Notifications API + service worker for push-style alerts in the PWA.
+
+6. Analytics & productivity tracking
+
+- Time periods: provide weekly and monthly views.
+
+- Metrics (all required):
+
+	- Completed vs pending tasks per day.
+
+	- Number of overdue tasks.
+
+	- Average completion rate (percentage of tasks completed on time).
+
+- Scoring system:
+
+	- +10 points for on-time completion.
+
+	- +5 points for late completion.
+
+	- -5 points for missed tasks.
+
+- Score tracker & celebratory popup:
+
+	- Show weekly and monthly total scores.
+
+	- When the user checks their weekly or monthly score, display a celebratory popup such as:
+
+		- “You scored a total of X this week!”
+
+		- “You scored a total of X this month!”
+
+- The popup should feel rewarding but simple (e.g., message, icon, subtle animation).
+
+Multi-platform UI (web + Android via PWA)
+7. Responsive design (TypeScript + Tailwind CSS)
+
+- Use a Node.js-based build setup (e.g., Vite/Next or similar) with TypeScript and Tailwind CSS for the front-end.
+​
+- Mobile‑first layout; no horizontal scrolling on small screens.
+
+- Use Tailwind utility classes for spacing, typography, colors, and responsive breakpoints.
+​
+- Touch‑friendly buttons and appropriate font sizes on mobile.
+
+8. Screens / pages
+
+- Login / Register screen.
+
+- Home / Task List screen (default after login):
+
+	- Lists tasks with filters and search.
+
+- Task Editor screen (Add/Edit task):
+
+	- Form for all task fields including attachments.
+
+- Calendar / Schedule view:
+
+	- Calendar-like layout (similar in concept to Google Calendar) showing tasks on their dates for easier tracking.
+
+- Analytics / Dashboard screen:
+
+	- Charts and summaries for weekly/monthly stats and scores, including access to the celebratory popup when viewing totals.
+
+- Do not place all views on a single screen; use simple navigation (tabs, nav bar, or menu) between these screens.
+
+9. Design style
+
+- Minimal, calming design suitable for a planner/productivity tool.
+
+- Use soft colors and cool gradients in the background, implemented via Tailwind utilities (e.g., gradient backgrounds).
+​
+- Consistent color coding for priorities (e.g., red for urgent, yellow for medium, green/blue for normal).
+
+PWA requirements
+10. Web App Manifest
+
+- Add manifest.webmanifest (or similar) and link it in <head>.
+​
+- Include:
+
+	- name and short_name.
+​
+	- icons at least 192×192 and 512×512 PNG.
+​
+	- start_url (e.g., /index.html or main route).
+
+	- display: "standalone" so the app opens without the browser UI when launched from the home screen.
+
+	- theme_color and background_color to match the chosen design.
+
+11. Service worker & installability
+
+- Register a service worker in TypeScript/JavaScript.
+​
+- Minimal requirements:
+
+	- Pre‑cache the app shell (compiled HTML, JS bundle, CSS, icons) during the install event so the UI loads even when offline.
+​
+	- Use a caching strategy (e.g., cache‑first for static assets) so subsequent loads are fast and the app works when the network is down.
+​
+- Ensure the app is served over HTTPS and passes PWA installability checks, so Chrome on Android offers “Install app / Add to Home screen” and it opens in standalone mode.
+​
+
+12. Basic offline support
+
+- Implement basic offline support for a better PWA experience:
+
+	- When offline, the app should still load the UI (cached app shell via service worker).
+​
+	- Cache last known tasks using a local store (e.g., IndexedDB or localStorage) so users can view their previous tasks even without internet.
+​
+
+- Full, reliable synchronization of create/edit/delete operations is only required when the device is online; offline edits beyond temporary local state are not mandatory.
+
+Data and backend
+13. Backend / database (Firebase)
+
+- Use a single Firebase project for the web app.
+​
+- Collections/tables example:
+
+	- users: user profile and settings.
+
+	- tasks: userId, title, description, category, priority, dueDateTime, status, attachments reference (Cloud Storage URL/metadata), score impact, timestamps.
+
+	- Optional: stats or derived data for weekly/monthly scores and metrics.
+
+- Use Firebase’s real-time capabilities so changes propagate quickly across devices.
+​
+14. API/structure for ESP32
+
+- Provide simple, documented data access patterns so ESP32 can:
+
+	- Read all tasks that are due within the next 30 minutes for a given user.
+
+- ESP32 is read-only:
+
+	- It does not update tasks (no mark-as-done/snooze from ESP32).
+
+	- It only reads and displays tasks and can use text-to-speech/voice prompts and a buzzer to notify the user (handled on the ESP32 side).
+
+App behavior on Android (PWA)
+15. Startup behavior
+
+- When installed as a PWA and launched:
+
+	- If the user is not authenticated or has no active session, start at the Login screen.
+
+	- If the user has a valid saved login/session, start at the Home / Task List or main “home” screen directly.

@@ -1,0 +1,52 @@
+Can you update the scoring and notifications logic with the following rules:
+
+Deleting tasks and score impact
+
+If a missed task is deleted, the negative score for that missed task must still be applied and kept (for example, the -5 points should still count in the user’s history even though the task record is removed).
+​
+
+If a task is upcoming or pending and the user deletes it, the deletion must not affect the score at all; it should just be removed normally with no positive or negative score change.
+
+Recurring tasks and score
+
+For recurring tasks, if the user deletes the recurring task, any negative points accumulated from past missed occurrences must remain counted in the score history.
+
+Deleting the recurring task should stop future occurrences, but must not erase the score effects of previous missed days.
+​
+
+Weekly, monthly, and yearly score breakdowns
+
+The weekly score breakdown should:
+
+Track scores per week.
+
+Reset its weekly total every week on Saturday (Saturday is considered the end of the scoring week).
+​
+
+The monthly score breakdown should:
+
+Track scores per month.
+
+Reset its monthly total on the last Saturday of each month.
+
+Add a separate “yearly total score” breakdown that:
+
+Aggregates all scores from the time the user started using the app within the current year.
+
+Resets only when a new year starts (or according to a clear yearly reset rule you implement).
+​
+
+Notifications: vibration and sound (especially on mobile)
+
+For reminders and important notifications (e.g., upcoming tasks, tasks due soon or missed), add:
+
+A sound notification, where supported by the browser/device.
+​
+
+A vibration effect on compatible mobile devices using the Vibration API for the PWA, where permissions allow it.
+​
+
+The goal is that on mobile, users receive a clear audible and/or haptic (vibration) alert when important notifications are triggered, within the limitations of web/PWA capabilities and user permissions.
+​
+
+Please implement these rules so that missed deletions and recurring-task deletions still influence scores correctly, weekly/monthly/yearly breakdowns reset at the specified times, and notifications on mobile include vibration and sound where possible.

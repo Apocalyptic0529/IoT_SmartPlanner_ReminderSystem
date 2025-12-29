@@ -1,0 +1,61 @@
+Please fix both issues:
+
+Ensure proper text contrast in dark mode
+
+All text elements (labels, buttons, inputs, filters, calendar picker, dropdowns, etc.) must use light text colors (text-white, text-gray-100, text-gray-50) on dark backgrounds.
+
+Use Tailwind's dark: prefix consistently: dark:text-white, dark:text-gray-100, etc.
+
+Fix specific problematic areas
+
+Filters: Ensure filter labels, selected filters, and dropdown text are visible (dark:text-white dark:bg-gray-800).
+
+Create Task calendar picker: Date picker text, selected dates, and controls must be readable (dark:text-gray-100 dark:bg-gray-900).
+
+All form inputs/fields: Input text, placeholders, and labels must contrast with dark backgrounds (dark:text-white dark:placeholder-gray-400).
+
+Fix dark mode switch synchronization
+
+Detect actual theme on app load and sync the switch state correctly:
+
+Check localStorage theme preference and system preference (prefers-color-scheme).
+
+Set switch to match the actual current theme (not just stored value).
+
+Prevent double-toggle glitch: Ensure clicking the switch once immediately applies the correct theme and updates switch state.
+
+Use proper initialization logic:
+
+text
+// On app load:
+const savedTheme = localStorage.getItem('theme');
+const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+const currentTheme = savedTheme || systemTheme;
+
+// Apply theme to document
+document.documentElement.classList.toggle('dark', currentTheme === 'dark');
+
+// Sync switch state
+darkModeSwitch.checked = currentTheme === 'dark';
+Global dark mode text rules
+
+Apply these classes globally or to parent containers:
+
+text
+dark:text-white
+dark:text-gray-100  
+dark:text-gray-300 (for secondary text)
+dark:placeholder-gray-400
+dark:border-gray-600
+dark:bg-gray-800 dark:bg-gray-900 (containers)
+Add dark:shadow-lg or dark:ring-1 dark:ring-white/10 for better element separation.
+
+Test all UI elements
+
+Verify every text element (buttons, cards, modals, tooltips, navigation, charts, etc.) is readable in dark mode.
+
+Confirm dark mode switch works correctly on first load and toggle (no double-click needed).
+
+Text must have minimum 4.5:1 contrast ratio against backgrounds.
+
+Please update all dark mode CSS classes and switch logic so no text is invisible, the dark mode switch syncs correctly on load, and the entire UI remains fully readable in both light and dark modes.
