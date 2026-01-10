@@ -13,8 +13,8 @@ self.addEventListener('push', (event) => {
   
   const options = {
     body: data.body,
-    icon: '/favicon.png',
-    badge: '/favicon.png',
+    icon: '/MMKLOGO.png',
+    badge: '/MMKLOGO.png',
     vibrate: [100, 50, 100],
     data: {
       url: self.location.origin
